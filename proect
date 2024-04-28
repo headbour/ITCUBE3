@@ -1,0 +1,134 @@
+import telebot
+from telebot import types
+import random
+
+slojnost = 0
+bot = telebot.TeleBot('6853830101:AAF11SzsvU_oazptBDwU8KZIKUQSblat_2w')
+os_vopros = ['Найдите x: −7(−2 + 3x) − 2x = −9',
+             'Стрелок 4 раза стреляет по мишеням. Вероятность попадания в мишень при одном выстреле равна 0,5.'
+             ' Найдите вероятность того, что стрелок первые 3 раза попал в мишени, а последний раз промахнулся',
+             'На экзамене по геометрии школьнику достается одна задача из сборника. Вероятность того, что эта задача'
+             ' по теме «Углы», равна 0,1. Вероятность того, что это окажется задача по теме «Параллелограмм», равна 0,6. '
+             'В сборнике нет задач, которые одновременно относятся к этим двум темам. Найдите вероятность того, что на экзамене '
+             'школьнику достанется задача по одной из этих двух тем']
+os_otvet = ['1', '0,0625', '0,7']
+l_vopros = ['Найдите X в уравнении: 56 - (x - 15) = 30', 'Найдите Y в уравнении: (45 - y) + 18 = 58',
+            'Найдите X в уравнении: (24 + x) - 21 = 10']
+l_otvet = ['41', '5', '7']
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup()
+    btn1 = types.InlineKeyboardButton('Начать!')
+    markup.row(btn1)
+    btn2 = types.InlineKeyboardButton('Информация!')
+    btn3 = types.InlineKeyboardButton('Правила!')
+    markup.row(btn2, btn3)
+    bot.send_message(message.chat.id,
+                     f'Привет {message.from_user.first_name}! Я Бот для подготовки к ОГЭ. Ты можешь выполнять'
+                     f' различные'
+                     f' варианты заданий из экзамена. Начнем?', reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def funks(message):
+    global slojnost
+    if message.text == 'Начать!':
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Простой!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Сложный!')
+        btn3 = types.InlineKeyboardButton('Очень сложный!')
+        markup.row(btn2, btn3)
+        btn4 = types.InlineKeyboardButton('Назад!')
+        markup.row(btn4)
+        bot.send_message(message.chat.id, f'{message.from_user.first_name} выберете уровень сложности заданий.',
+                         reply_markup=markup)
+
+    elif message.text == 'Простой!':
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Hачать')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn2)
+        slojnost = 1
+        bot.send_message(message.chat.id,
+                         f'Отличный выбор {message.from_user.first_name}! Дай знать когда будешь готов:)',
+                         reply_markup=markup)
+    elif message.text == 'Сложный!':
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Hачать!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn2)
+        slojnost = 2
+        bot.send_message(message.chat.id,
+                         f'Отличный выбор {message.from_user.first_name}! Дай знать когда будешь готов:)',
+                         reply_markup=markup)
+    elif message.text == 'Очень сложный!':
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Начать')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn2)
+        slojnost = 3
+        bot.send_message(message.chat.id,
+                         f'Отличный выбор {message.from_user.first_name}! Дай знать когда будешь готов:)',
+                         reply_markup=markup)
+
+    elif message.text == 'Назад!':
+        slojnost = 0
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Начать!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Информация!')
+        btn3 = types.InlineKeyboardButton('Правила!')
+        markup.row(btn2, btn3)
+        bot.send_message(message.chat.id,
+                         f'Привет {message.from_user.first_name}! Я Бот для подготовки к ОГЭ. Ты можешь выполнять'
+                         f' различные'
+                         f' варианты заданий из экзамена. Начнем?', reply_markup=markup)
+
+    elif message.text == 'Hазад!':
+        markup = types.ReplyKeyboardMarkup()
+        btn1 = types.InlineKeyboardButton('Простой!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Сложный!')
+        btn3 = types.InlineKeyboardButton('Очень сложный!')
+        markup.row(btn2, btn3)
+        btn4 = types.InlineKeyboardButton('Назад!')
+        markup.row(btn4)
+        bot.send_message(message.chat.id, f'{message.from_user.first_name} выберете уровень сложности заданий.',
+                         reply_markup=markup)
+
+
+    elif message.text == ('Hачать' and slojnost == 1) or ('Я это уже выполнял' and slojnost == 1):
+        markup = types.ReplyKeyboardMarkup()
+        random_num = random.choice(l_vopros)
+        btn1 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Я это уже выполнял')
+        markup.row(btn2)
+        bot.send_message(message.chat.id, random_num, reply_markup=markup)
+
+    elif message.text == ('Hачать' and slojnost == 2) or ('Я это уже выполнял' and slojnost == 2):
+        markup = types.ReplyKeyboardMarkup()
+        random_num = random.choice(l_vopros)
+        btn1 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Я это уже выполнял')
+        markup.row(btn2)
+        bot.send_message(message.chat.id, random_num, reply_markup=markup)
+
+    elif message.text == ('Начать' and slojnost == 3) or ('Я это уже выполнял' and slojnost == 3):
+        markup = types.ReplyKeyboardMarkup()
+        random_num = random.choice(os_vopros)
+        btn1 = types.InlineKeyboardButton('Hазад!')
+        markup.row(btn1)
+        btn2 = types.InlineKeyboardButton('Я это уже выполнял')
+        markup.row(btn2)
+        bot.send_message(message.chat.id, random_num, reply_markup=markup)
+
+
+bot.polling(none_stop=True)
